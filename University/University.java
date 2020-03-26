@@ -83,7 +83,7 @@ public class University {
 	public String student(int id){
 		if(id>=MINSTUD&&id<MINSTUD+nextCod)
 			return Students[id-MINSTUD].toString();
-		else return null;
+		return null;
 	}
 	
 	/**
@@ -105,7 +105,8 @@ public class University {
 	 * @return information about the course
 	 */
 	public String course(int code){
-		//TODO: to be implemented
+		if(code>=MINCOURSE&&code<MINCOURSE+nextCourse)
+			return this.Courses[code-MINCOURSE].toString();
 		return null;
 	}
 	
@@ -115,7 +116,8 @@ public class University {
 	 * @param courseCode id of the course
 	 */
 	public void register(int studentID, int courseCode){
-		//TODO: to be implemented
+		this.Students[studentID-MINSTUD].newCourse(courseCode);
+		this.Courses[courseCode-MINCOURSE].newStudent(studentID);
 	}
 	
 	/**
@@ -125,8 +127,14 @@ public class University {
 	 * @return list of attendees separated by "\n"
 	 */
 	public String listAttendees(int courseCode){
-		//TODO: to be implemented
-		return null;
+		int[] ArrayCod=this.Courses[courseCode-MINCOURSE].StudentsArray();
+		int i;
+		String tmp="";
+		
+		for(i=0;i<this.Courses[courseCode-MINCOURSE].CountStudents();i++) {
+			tmp+=this.Students[ArrayCod[i]-MINSTUD].toString()+"\n";
+		}
+		return i==0? "il corso non contiene studenti":tmp;
 	}
 
 	/**
@@ -136,7 +144,14 @@ public class University {
 	 * @return list of courses the student is registered for
 	 */
 	public String studyPlan(int studentID){
-		//TODO: to be implemented
-		return null;
+		int[] ArrayCod=this.Students[studentID-MINSTUD].CoursesArray();
+		String tmp="";
+		int i;
+		
+		for (i=0;i<this.Students[studentID-MINSTUD].CountCourses();i++) {
+			tmp+=this.Courses[ArrayCod[i]-MINCOURSE].toString() + "\n";
+		}
+		return i==0? "lo studente non frequenta corsi\n":tmp;
 	}
+	
 }
