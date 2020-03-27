@@ -7,8 +7,8 @@ package university;
  *
  */
 public class University {
-	private String RectorName;
-	private String RectorSurname;
+	private Rector rector;
+	
 	private String Name;
 	
 	private Student[] Students;
@@ -49,8 +49,7 @@ public class University {
 	 * @param last
 	 */
 	public void setRector(String first, String last){
-		this.RectorName=first;
-		this.RectorSurname=last;
+		this.rector=new Rector(first,last);		
 	}
 	
 	/**
@@ -59,7 +58,7 @@ public class University {
 	 * @return
 	 */
 	public String getRector(){
-		return this.RectorName + " " + this.RectorSurname;
+		return this.rector.toString();
 	}
 	
 	/**
@@ -142,7 +141,7 @@ public class University {
 	 * 
 	 * @param studentID id of the student
 	 * @return list of courses the student is registered for
-	 */
+	 */ 
 	public String studyPlan(int studentID){
 		int[] ArrayCod=this.Students[studentID-MINSTUD].CoursesArray();
 		String tmp="";
