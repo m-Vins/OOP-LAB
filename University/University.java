@@ -14,12 +14,12 @@ public class University {
 	private Student[] Students;
 	private int nextCod;
 	private static final int MAXSTUD=1000;
-	private static final int MINSTUD=1000;
+	private static final int FIRSTSTUD=10000;
 	
 	private Course[] Courses;
 	private int nextCourse;
 	private static final int MAXCOURSE=50;
-	private static final int MINCOURSE=10;
+	private static final int FIRSTCOURSE=10;
 	
 
 	/**
@@ -28,9 +28,9 @@ public class University {
 	 */
 	public University(String name){
 		this.Name=name;
-		this.nextCod=MINSTUD;
+		this.nextCod=FIRSTSTUD;
 		Students= new Student[MAXSTUD];
-		this.nextCourse=MINCOURSE;
+		this.nextCourse=FIRSTCOURSE;
 		Courses= new Course[MAXCOURSE];
 	}
 	
@@ -69,7 +69,7 @@ public class University {
 	 * @return
 	 */
 	public int enroll(String first, String last){
-		this.Students[nextCod-MINSTUD]= new Student(first,last,nextCod++);
+		this.Students[nextCod-FIRSTSTUD]= new Student(first,last,nextCod++);
 		return nextCod-1;
 	}
 	
@@ -80,8 +80,8 @@ public class University {
 	 * @return information about the student
 	 */
 	public String student(int id){
-		if(id>=MINSTUD&&id<MINSTUD+nextCod)
-			return Students[id-MINSTUD].toString();
+		if(id>=FIRSTSTUD&&id<FIRSTSTUD+nextCod)
+			return Students[id-FIRSTSTUD].toString();
 		return null;
 	}
 	
@@ -93,7 +93,7 @@ public class University {
 	 * @return the unique code assigned to the course
 	 */
 	public int activate(String title, String teacher){
-		this.Courses[nextCourse-MINCOURSE]=new Course(title,teacher,nextCourse++);
+		this.Courses[nextCourse-FIRSTCOURSE]=new Course(title,teacher,nextCourse++);
 		return nextCourse-1;
 	}
 	
@@ -104,8 +104,8 @@ public class University {
 	 * @return information about the course
 	 */
 	public String course(int code){
-		if(code>=MINCOURSE&&code<MINCOURSE+nextCourse)
-			return this.Courses[code-MINCOURSE].toString();
+		if(code>=FIRSTCOURSE&&code<FIRSTCOURSE+nextCourse)
+			return this.Courses[code-FIRSTCOURSE].toString();
 		return null;
 	}
 	
@@ -115,8 +115,8 @@ public class University {
 	 * @param courseCode id of the course
 	 */
 	public void register(int studentID, int courseCode){
-		this.Students[studentID-MINSTUD].newCourse(courseCode);
-		this.Courses[courseCode-MINCOURSE].newStudent(studentID);
+		this.Students[studentID-FIRSTSTUD].newCourse(courseCode);
+		this.Courses[courseCode-FIRSTCOURSE].newStudent(studentID);
 	}
 	
 	/**
@@ -126,12 +126,12 @@ public class University {
 	 * @return list of attendees separated by "\n"
 	 */
 	public String listAttendees(int courseCode){
-		int[] ArrayCod=this.Courses[courseCode-MINCOURSE].StudentsArray();
+		int[] ArrayCod=this.Courses[courseCode-FIRSTCOURSE].StudentsArray();
 		int i;
 		String tmp="";
 		
-		for(i=0;i<this.Courses[courseCode-MINCOURSE].CountStudents();i++) {
-			tmp+=this.Students[ArrayCod[i]-MINSTUD].toString()+"\n";
+		for(i=0;i<this.Courses[courseCode-FIRSTCOURSE].CountStudents();i++) {
+			tmp+=this.Students[ArrayCod[i]-FIRSTSTUD].toString()+"\n";
 		}
 		return i==0? "il corso non contiene studenti":tmp;
 	}
@@ -143,12 +143,12 @@ public class University {
 	 * @return list of courses the student is registered for
 	 */ 
 	public String studyPlan(int studentID){
-		int[] ArrayCod=this.Students[studentID-MINSTUD].CoursesArray();
+		int[] ArrayCod=this.Students[studentID-FIRSTSTUD].CoursesArray();
 		String tmp="";
 		int i;
 		
-		for (i=0;i<this.Students[studentID-MINSTUD].CountCourses();i++) {
-			tmp+=this.Courses[ArrayCod[i]-MINCOURSE].toString() + "\n";
+		for (i=0;i<this.Students[studentID-FIRSTSTUD].CountCourses();i++) {
+			tmp+=this.Courses[ArrayCod[i]-FIRSTCOURSE].toString() + "\n";
 		}
 		return i==0? "lo studente non frequenta corsi\n":tmp;
 	}
