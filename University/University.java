@@ -80,7 +80,7 @@ public class University {
 	 * @return information about the student
 	 */
 	public String student(int id){
-		if(id>=FIRSTSTUD&&id<FIRSTSTUD+nextCod)
+		if(id>=FIRSTSTUD||id<FIRSTSTUD+nextCod)
 			return Students[id-FIRSTSTUD].toString();
 		return null;
 	}
@@ -104,9 +104,10 @@ public class University {
 	 * @return information about the course
 	 */
 	public String course(int code){
-		if(code>=FIRSTCOURSE&&code<FIRSTCOURSE+nextCourse)
+		if(code>=FIRSTCOURSE||code<FIRSTCOURSE+nextCourse)
 			return this.Courses[code-FIRSTCOURSE].toString();
-		return null;
+		System.err.println("indice errato");
+		return "indice errato";
 	}
 	
 	/**
@@ -115,6 +116,14 @@ public class University {
 	 * @param courseCode id of the course
 	 */
 	public void register(int studentID, int courseCode){
+		if(courseCode<FIRSTCOURSE||courseCode>nextCourse) {
+			System.err.println("errore courseCODE!");
+			return ;
+		}
+		if(studentID<FIRSTSTUD||studentID>=nextCod) {
+			System.err.println("errore STUDENT_ID!");
+			return ;
+		}
 		this.Students[studentID-FIRSTSTUD].newCourse(courseCode);
 		this.Courses[courseCode-FIRSTCOURSE].newStudent(studentID);
 	}
@@ -126,6 +135,11 @@ public class University {
 	 * @return list of attendees separated by "\n"
 	 */
 	public String listAttendees(int courseCode){
+		if(courseCode<FIRSTCOURSE||courseCode>nextCourse) {
+			System.err.println("errore courseCODE!");
+			return "";
+		}
+		
 		int[] ArrayCod=this.Courses[courseCode-FIRSTCOURSE].StudentsArray();
 		int i;
 		String tmp="";
@@ -143,6 +157,10 @@ public class University {
 	 * @return list of courses the student is registered for
 	 */ 
 	public String studyPlan(int studentID){
+		if(studentID<FIRSTSTUD||studentID>=nextCod) {
+			System.err.println("errore STUDENT_ID!");
+			return "";
+		}
 		int[] ArrayCod=this.Students[studentID-FIRSTSTUD].CoursesArray();
 		String tmp="";
 		int i;
