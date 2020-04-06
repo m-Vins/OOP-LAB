@@ -21,6 +21,7 @@ public class University {
 	private static final int MAXCOURSE=50;
 	private static final int FIRSTCOURSE=10;
 	
+	
 
 	/**
 	 * Constructor
@@ -69,7 +70,11 @@ public class University {
 	 * @return
 	 */
 	public int enroll(String first, String last){
-		this.Students[nextCod-FIRSTSTUD]= new Student(first,last,nextCod++);
+		if (this.nextCod-FIRSTSTUD>=MAXSTUD) {
+			System.err.println("limite studenti superato!");
+			return -1;
+		}
+		this.Students[nextCod-FIRSTSTUD]= new Student(first,last,this.nextCod++);
 		return nextCod-1;
 	}
 	
@@ -171,4 +176,37 @@ public class University {
 		return i==0? "lo studente non frequenta corsi\n":tmp;
 	}
 	
+	/**
+	 * Adds an exam
+	 * 
+	 * @param StudentID id of the Student
+	 * @param CourseID  id of the Course
+	 * @param vote	number of points
+	 */
+	
+	public void exam(int StudentID, int CourseID, int vote) {
+		Exam exam=new Exam(StudentID,CourseID,vote);
+		this.Students[StudentID-FIRSTSTUD].addExam(exam);
+		this.Courses[CourseID-FIRSTCOURSE].addExam(exam);
+	}
+	
+	/**
+	 * Retrieves the AVG of the Student
+	 * @param StudentID StudentID of the Student
+	 * @return	
+	 */
+	public String studentAvg(Integer StudentID) {
+		if(this.Students[StudentID-FIRSTSTUD].isEmpty()) {
+			return "Student " + StudentID.toString() + "hasn't taken any exams";
+		}
+		return "Student " +StudentID.toString() + " : " + ((Integer)this.Students[StudentID-FIRSTSTUD].getAvg()).toString() ;
+	}
+	
+	public String courseAvg(Integer CourseID) {
+		if(this.Courses[CourseID-FIRSTCOURSE].isEmpty()) {
+			return "No student has taken the exam in " + this.Courses[CourseID-FIRSTCOURSE].toName();
+		}
+		return "the average for the course " + this.Courses[CourseID-FIRSTCOURSE].toName() + " is :" + 
+		((Integer)this.Courses[CourseID-FIRSTCOURSE].getAVG()).toString();
+	}
 }
