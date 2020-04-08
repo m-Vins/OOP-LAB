@@ -77,6 +77,7 @@ public class Course {
 	public int getAVG() {
 		int m=0;
 		for(Exam x: exams) {
+			if(x==null) break;
 			m+=x.getPoints();
 		}
 		m/=this.nextExam;
