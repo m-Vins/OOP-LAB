@@ -12,7 +12,7 @@ public class University {
 	private String Name;
 	
 	private Student[] Students;
-	private int nextCod;
+	private int nextStud;
 	private static final int MAXSTUD=1000;
 	private static final int FIRSTSTUD=10000;
 	
@@ -29,7 +29,7 @@ public class University {
 	 */
 	public University(String name){
 		this.Name=name;
-		this.nextCod=FIRSTSTUD;
+		this.nextStud=FIRSTSTUD;
 		Students= new Student[MAXSTUD];
 		this.nextCourse=FIRSTCOURSE;
 		Courses= new Course[MAXCOURSE];
@@ -70,12 +70,12 @@ public class University {
 	 * @return
 	 */
 	public int enroll(String first, String last){
-		if (this.nextCod-FIRSTSTUD>=MAXSTUD) {
+		if (this.nextStud-FIRSTSTUD>=MAXSTUD) {
 			System.err.println("limite studenti superato!");
 			return -1;
 		}
-		this.Students[nextCod-FIRSTSTUD]= new Student(first,last,this.nextCod++);
-		return nextCod-1;
+		this.Students[nextStud-FIRSTSTUD]= new Student(first,last,this.nextStud++);
+		return nextStud-1;
 	}
 	
 	/**
@@ -85,7 +85,7 @@ public class University {
 	 * @return information about the student
 	 */
 	public String student(int id){
-		if(id>=FIRSTSTUD||id<FIRSTSTUD+nextCod)
+		if(id>=FIRSTSTUD||id<FIRSTSTUD+nextStud)
 			return Students[id-FIRSTSTUD].toString();
 		return null;
 	}
@@ -98,6 +98,10 @@ public class University {
 	 * @return the unique code assigned to the course
 	 */
 	public int activate(String title, String teacher){
+		if(this.nextCourse-FIRSTCOURSE>=MAXCOURSE) {
+			System.err.println("limite corsi superato");
+			return -1;
+		}
 		this.Courses[nextCourse-FIRSTCOURSE]=new Course(title,teacher,nextCourse++);
 		return nextCourse-1;
 	}
@@ -125,7 +129,7 @@ public class University {
 			System.err.println("errore courseCODE!");
 			return ;
 		}
-		if(studentID<FIRSTSTUD||studentID>=nextCod) {
+		if(studentID<FIRSTSTUD||studentID>=nextStud) {
 			System.err.println("errore STUDENT_ID!");
 			return ;
 		}
@@ -154,6 +158,8 @@ public class University {
 		}
 		return i==0? "il corso non contiene studenti":tmp;
 	}
+	
+	
 
 	/**
 	 * Retrieves the study plan for a student
@@ -162,7 +168,7 @@ public class University {
 	 * @return list of courses the student is registered for
 	 */ 
 	public String studyPlan(int studentID){
-		if(studentID<FIRSTSTUD||studentID>=nextCod) {
+		if(studentID<FIRSTSTUD||studentID>=nextStud) {
 			System.err.println("errore STUDENT_ID!");
 			return "";
 		}
@@ -176,37 +182,118 @@ public class University {
 		return i==0? "lo studente non frequenta corsi\n":tmp;
 	}
 	
-	/**
-	 * Adds an exam
-	 * 
-	 * @param StudentID id of the Student
-	 * @param CourseID  id of the Course
-	 * @param vote	number of points
-	 */
 	
-	public void exam(int StudentID, int CourseID, int vote) {
-		Exam exam=new Exam(StudentID,CourseID,vote);
-		this.Students[StudentID-FIRSTSTUD].addExam(exam);
-		this.Courses[CourseID-FIRSTCOURSE].addExam(exam);
+	private boolean checkStudentID(int ID) {
+		if(ID<FIRSTSTUD) return false;
+		if(ID>=FIRSTSTUD+nextStud) return false;
+		return true;
+	}
+	
+	private boolean checkCourseID(int ID) {
+		if(ID<FIRSTCOURSE) return false;
+		if(ID>=FIRSTCOURSE+nextCourse) return false;
+		return true;
 	}
 	
 	/**
-	 * Retrieves the AVG of the Student
-	 * @param StudentID StudentID of the Student
-	 * @return	
+	 * Retrieve the Student
+	 * @param StudentID ID of the student
+	 * @return
 	 */
-	public String studentAvg(Integer StudentID) {
-		if(this.Students[StudentID-FIRSTSTUD].isEmpty()) {
-			return "Student " + StudentID.toString() + "hasn't taken any exams";
+	protected Student getStudent(int StudentID) {
+		if(!checkStudentID(StudentID)) {
+			System.err.println("ERRORE CODICE STUDENTE");
+			return null;
 		}
-		return "Student " +StudentID.toString() + " : " + ((Integer)this.Students[StudentID-FIRSTSTUD].getAvg()).toString() ;
+		return this.Students[StudentID-FIRSTSTUD];
 	}
 	
-	public String courseAvg(Integer CourseID) {
-		if(this.Courses[CourseID-FIRSTCOURSE].isEmpty()) {
-			return "No student has taken the exam in " + this.Courses[CourseID-FIRSTCOURSE].toName();
+	/**
+	 * Retrieve the Course
+	 * @param CourseID ID of the Course
+	 * @return
+	 */
+	protected Course getCourse(int CourseID) {
+		if(!checkCourseID(CourseID)) {
+			System.err.println("ERRORE NUMERO CORSO");
+			return null;
 		}
-		return "the average for the course " + this.Courses[CourseID-FIRSTCOURSE].toName() + " is :" + 
-		((Integer)this.Courses[CourseID-FIRSTCOURSE].getAVG()).toString();
+		return this.Courses[CourseID-FIRSTCOURSE];
 	}
+	
+	/**
+	 * Retrieve the count of the students
+	 * @return
+	 */
+	protected int getStudentCounts() {
+		return nextStud-FIRSTSTUD;
+	}
+	
+	/**
+	 * Retrieve the array of the students
+	 * @return
+	 */
+	protected Student[] getStudents() {
+		return this.Students;
+	}
+
+	
+//	/**
+//	 * Adds an exam
+//	 * 
+//	 * @param StudentID id of the Student
+//	 * @param CourseID  id of the Course
+//	 * @param vote	number of points
+//	 */
+//	
+//	public void exam(int StudentID, int CourseID, int vote) {
+//		Exam exam=new Exam(StudentID,CourseID,vote);
+//		this.Students[StudentID-FIRSTSTUD].addExam(exam);
+//		this.Courses[CourseID-FIRSTCOURSE].addExam(exam);
+//	}
+//	
+//	/**
+//	 * Retrieves the AVG of the Student
+//	 * @param StudentID StudentID of the Student
+//	 * @return	
+//	 */
+//	public String studentAvg(Integer StudentID) {
+//		if(this.Students[StudentID-FIRSTSTUD].isEmpty()) {
+//			return "Student " + StudentID.toString() + "hasn't taken any exams";
+//		}
+//		return "Student " +StudentID.toString() + " : " + ((Integer)this.Students[StudentID-FIRSTSTUD].getAvg()).toString() ;
+//	}
+//	
+//	public String courseAvg(Integer CourseID) {
+//		if(this.Courses[CourseID-FIRSTCOURSE].isEmpty()) {
+//			return "No student has taken the exam in " + this.Courses[CourseID-FIRSTCOURSE].toName();
+//		}
+//		return "the average for the course " + this.Courses[CourseID-FIRSTCOURSE].toName() + " is :" + 
+//		((Integer)this.Courses[CourseID-FIRSTCOURSE].getAVG()).toString();
+//	}
+//	
+//	public String topThreeStudents() {
+//		int n1,n2,n3;
+//		String MessageOut="";
+//		n1=n2=n3=0;
+//		for(Student x: this.Students) {
+//			if(x.getValuation()>n1) {
+//				n3=n2;
+//				n2=n1;
+//				n1=x.getID();
+//			}
+//		}
+//		MessageOut+=this.Students[n1-FIRSTSTUD].getFirstName() + this.Students[n1-FIRSTSTUD].getLastName() + 
+//				((Integer)this.Students[n1-FIRSTSTUD].getValuation()) +"\n";
+//		MessageOut+=this.Students[n2-FIRSTSTUD].getFirstName() + this.Students[n2-FIRSTSTUD].getLastName() + 
+//				((Integer)this.Students[n2-FIRSTSTUD].getValuation()) +"\n";
+//		MessageOut+=this.Students[n3-FIRSTSTUD].getFirstName() + this.Students[n3-FIRSTSTUD].getLastName() + 
+//				((Integer)this.Students[n3-FIRSTSTUD].getValuation()) +"\n";
+//		
+//		return MessageOut;
+//	}
+	
+	
+
+	
 }
