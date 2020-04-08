@@ -234,7 +234,10 @@ public class University {
 	 * @return
 	 */
 	protected Student[] getStudents() {
-		return this.Students;
+		Student[] Array= new Student[nextStud-FIRSTSTUD];
+		for(int i=0;i<nextStud-FIRSTSTUD;i++)
+			Array[i]=this.Students[i];
+		return Array;
 	}
 
 	
