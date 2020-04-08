@@ -74,13 +74,13 @@ public class Course {
 		return nextExam==0;
 	}
 	
-	public int getAVG() {
-		int m=0;
+	public float getAVG() {
+		float m=0;
 		for(Exam x: exams) {
 			if(x==null) break;
 			m+=x.getPoints();
 		}
-		m/=this.nextExam;
+		m/=(float)this.nextExam;
 		return m;
 	}
 }
