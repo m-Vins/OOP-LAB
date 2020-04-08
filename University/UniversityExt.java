@@ -72,10 +72,12 @@ public class UniversityExt extends University {
 	
 	public String topThreeStudents() {
 		Student[] Students = this.getStudents();
-		
+		//TO DO: fare una copia del vettore
 		String MessageOut="";
 		
 		Arrays.sort(Students,0,this.getStudentCounts());
+		//Arrays.sort(Students,0,this.getStudentCounts(),((a,b)-> Student.cmp(a,b)));
+		//Arrays.sort(Students,0,this.getStudentCounts(),Student::cmp);
 		
 		if(Students[0]!=null) {
 			MessageOut+=Students[0].getFirstName() +" "+ Students[0].getLastName() + " "+
