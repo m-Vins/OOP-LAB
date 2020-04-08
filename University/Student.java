@@ -5,7 +5,7 @@ package university;
  * @author Master
  *
  */
-public class Student {
+public class Student implements Comparable{
 	private String Name;
 	private String Surname;
 	private Integer Key; 
@@ -77,14 +77,59 @@ public class Student {
 	
 	/**
 	 * Retrieves the AVG of the Student
-	 * @return int AVG
+	 * @return  AVG
 	 */
-	public int getAvg() {
-		int m=0;
+	public float getAvg() {
+		float m=000;
 		for(Exam x: this.exams) {
+			if(x==null)	break;
 			m+=x.getPoints();
 		}
-		m/=this.nextExam;
+		m/=(float)this.nextExam;
 		return m;
 	}
+	
+	/**
+	 * Retrieves the valuation of the student
+	 * @return
+	 */
+	public Integer getValuation() {
+		Integer x;
+		x=(int)this.getAvg();
+		x+=(this.nextExam/this.nextCourse)*10;
+		return x;
+	}
+	
+	
+	
+	
+	/**
+	 * Retrieves the ID of the Student
+	 * @return
+	 */
+	public int getID() {
+		return this.Key;
+	}
+	
+	/**
+	 * Retrieves the FirstName of the Student
+	 * @return
+	 */
+	public String getFirstName() {
+		return this.Name;
+	}
+	
+	/**
+	 * Retrieves the LastName of the student
+	 * @return
+	 */
+	public String getLastName() {
+		return this.Surname;
+	}
+
+	@Override
+	public int compareTo(Object arg0) {
+		return -this.getValuation().compareTo(((Student)arg0).getValuation());
+	}
+
 }
