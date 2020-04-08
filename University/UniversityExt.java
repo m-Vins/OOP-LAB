@@ -67,7 +67,7 @@ public class UniversityExt extends University {
 			return "No student has taken the exam in " + this.getCourse(CourseID).toName();
 		}
 		return "the average for the course " + this.getCourse(CourseID).toName() + " is :" + 
-		((Integer)this.getCourse(CourseID).getAVG()).toString();
+		this.getCourse(CourseID).getAVG();
 	}
 	
 	public String topThreeStudents() {
