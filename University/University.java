@@ -1,5 +1,8 @@
 package university;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This class represents a university education system.
  * 
@@ -238,6 +241,12 @@ public class University {
 		for(int i=0;i<nextStud-FIRSTSTUD;i++)
 			Array[i]=this.Students[i];
 		return Array;
+	}
+	
+	protected List<Student> getStudentsList() {
+		List<Student> Lista= Arrays.asList(Students);
+		Lista=Lista.subList(0, nextStud-FIRSTSTUD);
+		return Lista;
 	}
 
 	

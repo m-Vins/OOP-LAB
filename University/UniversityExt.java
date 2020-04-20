@@ -1,6 +1,7 @@
 package university;
 
-import java.util.Arrays;
+
+import java.util.List;
 import java.util.logging.Logger;
 
 public class UniversityExt extends University {
@@ -71,26 +72,43 @@ public class UniversityExt extends University {
 	}
 	
 	public String topThreeStudents() {
-		Student[] Students = this.getStudents();
-		//TO DO: fare una copia del vettore
+		//Student[] Students = this.getStudents();
+		List<Student> Lista = this.getStudentsList();
+
 		String MessageOut="";
 		
-		Arrays.sort(Students,0,this.getStudentCounts());
-		//Arrays.sort(Students,0,this.getStudentCounts(),((a,b)-> Student.cmp(a,b)));
-		//Arrays.sort(Students,0,this.getStudentCounts(),Student::cmp);
+		Lista.sort(Student::comparator);
 		
-		if(Students[0]!=null) {
-			MessageOut+=Students[0].getFirstName() +" "+ Students[0].getLastName() + " "+
-					Students[0].getValuation() +"\n";
+		if(Lista.size()>0) {
+			MessageOut+=Lista.get(0).getFirstName() +" "+ Lista.get(0).getLastName() + " "+
+					Lista.get(0).getValuation() +"\n";
 		}		
-		if(Students[1]!=null) {
-			MessageOut+=Students[1].getFirstName() +" "+ Students[1].getLastName() + " "+
-					Students[1].getValuation() +"\n";
+		if(Lista.size()>1) {
+			MessageOut+=Lista.get(1).getFirstName() +" "+ Lista.get(1).getLastName() + " "+
+					Lista.get(1).getValuation() +"\n";
 		}
-		if(Students[2]!=null) {
-			MessageOut+=Students[2].getFirstName() +" "+ Students[2].getLastName() + " "+
-					Students[2].getValuation() +"\n";
+		if(Lista.size()>2) {
+			MessageOut+=Lista.get(2).getFirstName() +" "+ Lista.get(2).getLastName() + " "+
+					Lista.get(2).getValuation() +"\n";
 		}
+		
+		
+//		Arrays.sort(Students,0,this.getStudentCounts());
+//		Arrays.sort(Students,0,this.getStudentCounts(),(a,b)-> (int)(b.getValuation()-a.getValuation()));
+//		Arrays.sort(Students,0,this.getStudentCounts(),Student::comparator);
+//		
+//		if(Students[0]!=null) {
+//			MessageOut+=Students[0].getFirstName() +" "+ Students[0].getLastName() + " "+
+//					Students[0].getValuation() +"\n";
+//		}		
+//		if(Students[1]!=null) {
+//			MessageOut+=Students[1].getFirstName() +" "+ Students[1].getLastName() + " "+
+//					Students[1].getValuation() +"\n";
+//		}
+//		if(Students[2]!=null) {
+//			MessageOut+=Students[2].getFirstName() +" "+ Students[2].getLastName() + " "+
+//					Students[2].getValuation() +"\n";
+//		}
 		
 		return MessageOut;
 	}
