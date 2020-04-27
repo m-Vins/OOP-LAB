@@ -1,5 +1,7 @@
 package hydraulic;
 
+import java.util.ArrayList;
+
 /**
  * Represents a source of water, i.e. the initial element for the simulation.
  *
@@ -31,6 +33,16 @@ public class Source extends Element {
 		Observer.notifyFlow("Source", getName(), SimulationObserver.NO_FLOW, this.getFlowOut());
 		this.getOutput().setFlowIn(getFlowOut());
 		this.getOutput().setNextFlow(Observer);
+	}
+
+	public String layoutWrapper() {
+		return this.layoutR("", 0, new ArrayList<Integer>());
+	}
+	
+	@Override
+	protected String layoutR(String l, int nSpace, ArrayList<Integer> posSlash) {
+		String ret= l+" ["+this.getName()+"]Source";
+		return this.getOutput().layoutR(ret, ret.length(),posSlash);
 	}
 	
 

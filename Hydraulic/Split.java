@@ -1,5 +1,7 @@
 package hydraulic;
 
+import java.util.ArrayList;
+
 /**
  * Represents a split element, a.k.a. T element
  * 
@@ -45,6 +47,35 @@ public class Split extends Element {
 		this.Elements[0].setNextFlow(Observer);
 		this.Elements[1].setFlowIn(this.getFlowOut());
 		this.Elements[1].setNextFlow(Observer);
+	}
+
+
+
+
+	@Override
+	protected String layoutR(String l, int nSpace, ArrayList<Integer> posSlash) {
+		String ret=" -> ["+this.getName()+"]Split +";
+		int length=nSpace+ret.length()-1;
+		posSlash.add(length);
+		ret=l+ret;
+		ret += this.Elements[0].layoutR(ret, length,posSlash);
+		for(int i=0,pos=0;i<length;i++) {
+			if(posSlash.get(pos)==i) {
+				ret+="|";
+				pos++;
+			}else ret+=" ";
+		}
+		ret+= "|\n";
+		for(int i=0,pos=0;i<length;i++) {
+			if(posSlash.get(pos)==i) {
+				ret+="|";
+				pos++;
+			}else ret+=" ";
+		}
+		ret+="+";
+		ret += this.Elements[1].layoutR(ret, length,posSlash);
+		posSlash.remove(posSlash.size()-1);
+		return ret;
 	}
 	
 }

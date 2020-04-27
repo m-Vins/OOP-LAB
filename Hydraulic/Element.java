@@ -1,5 +1,7 @@
 package hydraulic;
 
+import java.util.ArrayList;
+
 /**
  * Represents the generic abstract element of an hydraulics system.
  * It is the base class for all elements.
@@ -64,4 +66,6 @@ public abstract class Element {
 	
 	
 	protected abstract void setNextFlow(SimulationObserver Observer);
+	
+	protected abstract String layoutR(String l, int nSpace, ArrayList<Integer> posSlash);
 }

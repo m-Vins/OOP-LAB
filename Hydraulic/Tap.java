@@ -1,5 +1,7 @@
 package hydraulic;
 
+import java.util.ArrayList;
+
 /**
  * Represents a tap that can interrupt the flow.
  * 
@@ -41,6 +43,13 @@ public class Tap extends Element {
 		this.getOutput().setFlowIn(this.getFlowOut());
 		this.getOutput().setNextFlow(Observer);
 		
+	}
+
+
+	@Override
+	protected String layoutR(String l, int nSpace, ArrayList<Integer> posSlash) {
+		String  ret=l + "-> ["+this.getName()+"]Tap ";
+		return this.getOutput().layoutR(ret , ret.length(),posSlash);
 	}
 	
 
