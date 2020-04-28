@@ -10,8 +10,8 @@ import java.util.ArrayList;
  */
 
 public class Multisplit extends Split {
-	Element[] Elements;
-	double[] Proportions;
+	private Element[] Elements;
+	private double[] Proportions;
 	/**
 	 * Constructor
 	 * @param name
@@ -56,7 +56,9 @@ public class Multisplit extends Split {
 	 * @param proportions the proportions of flow for each output
 	 */
 	public void setProportions(double... proportions) {
-		//TODO:
+		if(proportions.length!=Elements.length)
+			System.err.println("ERRORE SETPROPORTIONS!!");
+		this.Proportions=proportions;
 	}
 	
 	@Override
@@ -88,6 +90,19 @@ public class Multisplit extends Split {
 		}
 		posSlash.remove(posSlash.size()-1);
 		return ret;
+	}
+	
+	
+	
+	@Override
+	protected void setNextFlow(SimulationObserverExt Observer, boolean enableMaxFlowCheck) {
+		this.setFlowOut(this.getFlowIn());
+		if(this.getFlowIn()>this.getMaxFlow())	Observer.notifyFlowError("Source", getName(), getFlowIn(), getMaxFlow());
+		Observer.notifyFlow("Split", getName(), getFlowIn(), getFlowOut(), getFlowOut());
+		for(int i=0;i<Elements.length;i++) {
+			this.Elements[i].setFlowIn(this.getFlowOut()*Proportions[i]);
+			((ElementExt)this.Elements[i]).setNextFlow(Observer,enableMaxFlowCheck);
+		}
 	}
 	
 }

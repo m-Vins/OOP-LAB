@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Represents the sink, i.e. the terminal element of a system
  *
  */
-public class Sink extends Element {
+public class Sink extends ElementExt {
 
 	/**
 	 * Constructor
@@ -35,6 +35,15 @@ public class Sink extends Element {
 	@Override
 	protected String layoutR(String l, int nSpace, ArrayList<Integer> posSlash) {
 		return l+ "-> ["+this.getName()+"]Sink *\n";
+	}
+
+
+	@Override
+	protected void setNextFlow(SimulationObserverExt Observer, boolean enableMaxFlowCheck) {
+		this.setFlowOut(this.getFlowIn());
+		if(this.getFlowIn()>this.getMaxFlow())	Observer.notifyFlowError("Source", getName(), getFlowIn(), getMaxFlow());
+		Observer.notifyFlow("Sink", this.getName(), this.getFlowIn(), SimulationObserver.NO_FLOW);
+		
 	}
 	
 

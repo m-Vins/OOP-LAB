@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * receive a stream that is half the input stream of the split.
  */
 
-public class Split extends Element {
+public class Split extends ElementExt {
 	private Element[] Elements;
 	/**
 	 * Constructor
@@ -76,6 +76,17 @@ public class Split extends Element {
 		ret = this.Elements[1].layoutR(ret, length,posSlash);
 		posSlash.remove(posSlash.size()-1);
 		return ret;
+	}
+
+	@Override
+	protected void setNextFlow(SimulationObserverExt Observer, boolean enableMaxFlowCheck) {
+		this.setFlowOut(this.getFlowIn());
+		if(this.getFlowIn()>this.getMaxFlow())	Observer.notifyFlowError("Source", getName(), getFlowIn(), getMaxFlow());
+		Observer.notifyFlow("Split", getName(), getFlowIn(), getFlowOut(), getFlowOut());
+		this.Elements[0].setFlowIn(this.getFlowOut()/2);
+		((ElementExt)this.Elements[0]).setNextFlow(Observer,enableMaxFlowCheck);
+		this.Elements[1].setFlowIn(this.getFlowOut()/2);
+		((ElementExt)this.Elements[1]).setNextFlow(Observer,enableMaxFlowCheck);
 	}
 	
 }

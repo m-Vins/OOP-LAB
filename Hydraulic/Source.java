@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * The status of the source is defined through the method
  * {@link #setFlow(double) setFlow()}.
  */
-public class Source extends Element {
+public class Source extends ElementExt {
 
 	public Source(String name) {
 		super(name);
@@ -22,10 +22,16 @@ public class Source extends Element {
 	public void setFlow(double flow){
 		this.setFlowIn(flow);
 	}
-
+	
 	public void setAllFlow(SimulationObserver Observer) {
 		this.setNextFlow(Observer);
 	}
+	
+	
+	public void setAllFlowExt(SimulationObserverExt Observer, boolean enableMaxFlowCheck) {
+		this.setNextFlow(Observer,enableMaxFlowCheck);
+	}
+	
 
 	@Override
 	protected void setNextFlow(SimulationObserver Observer) {
@@ -43,6 +49,16 @@ public class Source extends Element {
 	protected String layoutR(String l, int nSpace, ArrayList<Integer> posSlash) {
 		String ret= l+" ["+this.getName()+"]Source";
 		return this.getOutput().layoutR(ret, ret.length(),posSlash);
+	}
+
+	@Override
+	protected void setNextFlow(SimulationObserverExt Observer, boolean enableMaxFlowCheck) {
+		this.setFlowOut(this.getFlowIn());
+		if(this.getFlowIn()>this.getMaxFlow())	Observer.notifyFlowError("Source", getName(), getFlowIn(), getMaxFlow());
+		Observer.notifyFlow("Source", getName(), SimulationObserver.NO_FLOW, this.getFlowOut());
+		this.getOutput().setFlowIn(getFlowOut());
+		((ElementExt)this.getOutput()).setNextFlow(Observer,enableMaxFlowCheck);
+		
 	}
 	
 

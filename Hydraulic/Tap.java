@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * {@link #setOpen(boolean) setOpen()}.
  */
 
-public class Tap extends Element {
+public class Tap extends ElementExt {
 	private boolean open;
 	
 	public Tap(String name) {
@@ -50,6 +50,17 @@ public class Tap extends Element {
 	protected String layoutR(String l, int nSpace, ArrayList<Integer> posSlash) {
 		String  ret=l + "-> ["+this.getName()+"]Tap ";
 		return this.getOutput().layoutR(ret , ret.length(),posSlash);
+	}
+
+	@Override
+	protected void setNextFlow(SimulationObserverExt Observer, boolean enableMaxFlowCheck) {
+		if(open)
+			this.setFlowOut(this.getFlowIn());
+		else this.setFlowOut(0.0);
+		if(this.getFlowIn()>this.getMaxFlow())	Observer.notifyFlowError("Source", getName(), getFlowIn(), getMaxFlow());
+		Observer.notifyFlow("Tap", getName(), getFlowIn(), getFlowOut());
+		this.getOutput().setFlowIn(this.getFlowOut());
+		((ElementExt)this.getOutput()).setNextFlow(Observer,enableMaxFlowCheck);
 	}
 	
 
