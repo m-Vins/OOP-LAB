@@ -58,7 +58,7 @@ public class Split extends Element {
 		int length=nSpace+ret.length()-1;
 		posSlash.add(length);
 		ret=l+ret;
-		ret += this.Elements[0].layoutR(ret, length,posSlash);
+		ret = this.Elements[0].layoutR(ret, length,posSlash);
 		for(int i=0,pos=0;i<length;i++) {
 			if(posSlash.get(pos)==i) {
 				ret+="|";
@@ -73,7 +73,7 @@ public class Split extends Element {
 			}else ret+=" ";
 		}
 		ret+="+";
-		ret += this.Elements[1].layoutR(ret, length,posSlash);
+		ret = this.Elements[1].layoutR(ret, length,posSlash);
 		posSlash.remove(posSlash.size()-1);
 		return ret;
 	}

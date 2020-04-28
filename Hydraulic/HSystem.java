@@ -1,3 +1,4 @@
+
 package hydraulic;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  * 
  */
 public class HSystem {
-	private ArrayList<Element> Elements; 
+	protected ArrayList<Element> Elements; 
 	
 	
 	public HSystem() {
@@ -19,7 +20,6 @@ public class HSystem {
 	 * @param elem
 	 */
 	public void addElement(Element elem){
-		// TODO: to be implemented
 		this.Elements.add(elem);
 	}
 	
@@ -30,7 +30,6 @@ public class HSystem {
 	 * @return an array of the elements added to the hydraulic system
 	 */
 	public Element[] getElements(){
-		// TODO: to be implemented
 		if(this.Elements.size()==0) return new Element[0];
 		
 		Element[] Elementi = new Element[this.Elements.size()];

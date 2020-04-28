@@ -24,7 +24,25 @@ public class HSystemExt extends HSystem{
 	 * Deletes a previously added element with the given name from the system
 	 */
 	public void deleteElement(String name) {
-		// TODO: to be implemented
+		Element Elemento=null;
+		
+		for(Element x:Elements)
+			if(x.getName().equals(name)) Elemento=x;
+		//se non trova niente ritorna
+		if(Elemento==null) return;
+		
+		if(Elemento instanceof Split || Elemento instanceof Multisplit) {
+			Elements.remove(Elemento);
+			return;
+		}
+		
+		for(Element x:Elements)
+			if(x.getOutput()==Elemento) {
+				x.connect(Elemento.getOutput());
+				Elements.remove(Elemento);
+				return;
+			}
+		
 	}
 
 	/**
