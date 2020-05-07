@@ -54,7 +54,6 @@ public class Source extends ElementExt {
 	@Override
 	protected void setNextFlow(SimulationObserverExt Observer, boolean enableMaxFlowCheck) {
 		this.setFlowOut(this.getFlowIn());
-		if(this.getFlowIn()>this.getMaxFlow())	Observer.notifyFlowError("Source", getName(), getFlowIn(), getMaxFlow());
 		Observer.notifyFlow("Source", getName(), SimulationObserver.NO_FLOW, this.getFlowOut());
 		this.getOutput().setFlowIn(getFlowOut());
 		((ElementExt)this.getOutput()).setNextFlow(Observer,enableMaxFlowCheck);
