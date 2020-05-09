@@ -2,6 +2,7 @@ package diet;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -14,9 +15,9 @@ import java.util.TreeMap;
  */
 public class Food {
 	
-	SortedMap<String,RawMaterial> rawMaterials= new TreeMap<String, RawMaterial>((a,b)->(a.compareTo(b)));
-	SortedMap<String,Product> Products= new TreeMap<String,Product>((a,b)->(a.compareTo(b)));
-	SortedMap<String,Recipe> Recipes= new TreeMap<String,Recipe>((a,b)->(a.compareTo(b)));
+	private SortedMap<String,RawMaterial> rawMaterials= new TreeMap<String, RawMaterial>((a,b)->(a.compareTo(b)));
+	private SortedMap<String,Product> Products= new TreeMap<String,Product>((a,b)->(a.compareTo(b)));
+	private SortedMap<String,Recipe> Recipes= new TreeMap<String,Recipe>((a,b)->(a.compareTo(b)));
 	/**
 	 * Define a new raw material.
 	 * 
@@ -132,7 +133,7 @@ public class Food {
 	 * @return the newly created menu
 	 */
 	public Menu createMenu(String name) {
-		return null;
+		return new Menu(name,new HashMap<String,Recipe>(this.Recipes),new HashMap<String,Product>(this.Products));
 	}
 	
 }

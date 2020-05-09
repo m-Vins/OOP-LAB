@@ -17,9 +17,9 @@ import java.util.SortedMap;
  */
 public class Recipe implements NutritionalElement {
     private String Name;
-    SortedMap<String,RawMaterial> rawMaterials;
-	List<String> Ingredients= new LinkedList<String>();
-	HashMap<String, Double> QuantityMap= new HashMap<String,Double>();
+    private SortedMap<String,RawMaterial> rawMaterials;
+	private List<String> Ingredients= new LinkedList<String>();
+	private HashMap<String, Double> QuantityMap= new HashMap<String,Double>();
 	
 	
 	

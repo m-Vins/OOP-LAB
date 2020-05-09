@@ -1,5 +1,9 @@
 package diet;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+
 /**
  * Represents a complete menu.
  * 
@@ -7,7 +11,20 @@ package diet;
  *
  */
 public class Menu implements NutritionalElement {
+	private String Name;
 	
+	private HashMap<String, Double> RecipesNames= new HashMap<String,Double>();
+	private HashMap<String, Recipe> Recipes= new HashMap<String,Recipe>();
+	
+	private Collection<String> ProductsNames= new ArrayList<String>();
+	private HashMap<String, Product> Products= new HashMap<String,Product>();
+	
+	
+	public Menu(String Name, HashMap<String,Recipe> Recipes, HashMap<String,Product> Products) {
+		this.Name=Name;
+		this.Recipes=Recipes;
+		this.Products=Products;
+	}
 	/**
 	 * Adds a given serving size of a recipe.
 	 * 
@@ -19,7 +36,8 @@ public class Menu implements NutritionalElement {
 	 * @return the same Menu to allow method chaining
 	 */
 	public Menu addRecipe(String recipe, double quantity) {
-		return null;
+		this.RecipesNames.put(recipe, quantity);
+		return this;
 	}
 
 	/**
@@ -31,7 +49,8 @@ public class Menu implements NutritionalElement {
 	 * @return the same Menu to allow method chaining
 	 */
 	public Menu addProduct(String product) {
-		return null;
+		this.ProductsNames.add(product);
+		return this;
 	}
 
 	/**
@@ -39,7 +58,7 @@ public class Menu implements NutritionalElement {
 	 */
 	@Override
 	public String getName() {
-		return null;
+		return this.Name;
 	}
 
 	/**
@@ -47,7 +66,12 @@ public class Menu implements NutritionalElement {
 	 */
 	@Override
 	public double getCalories() {
-		return 0.0;
+		return RecipesNames.keySet().stream().
+				mapToDouble((value)->(Recipes.get(value)
+				.getCalories()*RecipesNames.get(value)/100))
+				.sum()+ProductsNames.stream().
+				mapToDouble((value)->(Products
+				.get(value).getCalories())).sum();
 	}
 
 	/**
@@ -55,7 +79,12 @@ public class Menu implements NutritionalElement {
 	 */
 	@Override
 	public double getProteins() {
-		return 0.0;
+		return RecipesNames.keySet().stream().
+				mapToDouble((value)->(Recipes.get(value).
+				getProteins()*RecipesNames.get(value)/100))
+				.sum()+ProductsNames.stream().
+				mapToDouble((value)->(Products
+				.get(value).getProteins())).sum();
 	}
 
 	/**
@@ -63,7 +92,12 @@ public class Menu implements NutritionalElement {
 	 */
 	@Override
 	public double getCarbs() {
-		return 0.0;
+		return RecipesNames.keySet().stream().
+				mapToDouble((value)->(Recipes.get(value).
+				getCarbs()*RecipesNames.get(value)/100))
+				.sum()+ProductsNames.stream().
+				mapToDouble((value)->(Products.
+				get(value).getCarbs())).sum();
 	}
 
 	/**
@@ -71,7 +105,12 @@ public class Menu implements NutritionalElement {
 	 */
 	@Override
 	public double getFat() {
-		return 0.0;
+		return RecipesNames.keySet().stream().
+				mapToDouble((value)->(Recipes.get(value)
+				.getFat()*RecipesNames.get(value)/100))
+				.sum()+ProductsNames.stream().
+				mapToDouble((value)->(Products.
+				get(value).getFat())).sum();
 	}
 
 	/**
