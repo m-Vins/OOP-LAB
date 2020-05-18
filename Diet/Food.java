@@ -136,4 +136,17 @@ public class Food {
 		return new Menu(name,new HashMap<String,Recipe>(this.Recipes),new HashMap<String,Product>(this.Products));
 	}
 	
+	public SortedMap<String,Recipe> getRecipes() {
+		return this.Recipes;
+	}
+	public SortedMap<String,RawMaterial> getRawMaterials() {
+		return this.rawMaterials;
+	}
+	public SortedMap<String,Product> getProducts() {
+		return this.Products;
+	}
+	
+	
+	
+	
 }
