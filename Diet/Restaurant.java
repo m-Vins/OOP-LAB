@@ -3,9 +3,11 @@ package diet;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Stream;
 
 import diet.Order.OrderStatus;
 
@@ -105,8 +107,8 @@ public class Restaurant {
 	 */
 	public String ordersWithStatus(OrderStatus status) {
 		String ret="";
-		
-		return null;
+		return Orders.stream().filter(a->a.checkStatus(status))
+		.map(Order::toString).sorted().reduce(ret,(a,b)->(a+b));
 	}
 	
 	public void addOrder(Order order) {
@@ -114,21 +116,26 @@ public class Restaurant {
 	}
 	
 	
+	
 	public LocalTime getDeliveryTime(LocalTime time){
-		for(TimeTable x:TimeTables) {
-			if(time.isBefore(x.getStart()))
-				return x.getStart();
-			if(x.checkTime(time))
-				return time;
+		if(this.checkTime(time))
+			return time;
+		LocalTime ret;
+		Iterator<TimeTable> iterator=TimeTables.iterator();
+		while(iterator.hasNext()) {
+			if(iterator.next().getFinish().isBefore(time)&&
+					(ret=iterator.next().getStart()).isAfter(time))
+				return ret;
 		}
+		
 		//nel caso in cui l'ordine viene fatto dopo la chiusura
-		//allora la consegna avviena all'apertura del giorno dopo
+		//allora la consegna avviene all'apertura del giorno dopo
 		return TimeTables.first().getStart();
 	}
 	
 	public boolean checkTime(LocalTime time) {
 		for(TimeTable x:TimeTables) 
-			if(x.checkTime(time))
+			if(time.isAfter(x.getStart())&&time.isBefore(x.getFinish()))
 				return true;
 		return false;
 	}

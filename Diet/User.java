@@ -65,5 +65,8 @@ public class User {
 		this.Phone=phone;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return this.getFirstName()+" "+this.getLastName();
+	}
 }

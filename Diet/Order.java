@@ -11,14 +11,17 @@ public class Order {
 	private Restaurant Restaurant;
 	private User user;
 	private LocalTime Delivery;
-	private OrderStatus OrderStatus;
-	private PaymentMethod PayementMethod;
+	private OrderStatus Status;
+	private PaymentMethod Payment;
 	private Map<Menu,Integer> Menus=new HashMap<Menu,Integer>();
+	
 	
 	public Order(User user,Restaurant restaurant,int hh, int mm) {
 		this.user=user;
 		this.Restaurant=restaurant;
 		this.Delivery=restaurant.getDeliveryTime(LocalTime.of(hh, mm));
+		this.setStatus(OrderStatus.ORDERED);
+		this.setPaymentMethod(PaymentMethod.CASH);
 	}
 	/**
 	 * Defines the possible order status
@@ -47,7 +50,7 @@ public class Order {
 	 * @param method payment method
 	 */
 	public void setPaymentMethod(PaymentMethod method) {
-		PayementMethod=method;
+		Payment=method;
 	}
 	
 	/**
@@ -56,7 +59,7 @@ public class Order {
 	 * @return payment method
 	 */
 	public PaymentMethod getPaymentMethod() {
-		return this.PayementMethod;
+		return this.Payment;
 	}
 	
 	/**
@@ -64,7 +67,7 @@ public class Order {
 	 * @param newStatus order status
 	 */
 	public void setStatus(OrderStatus newStatus) {
-		this.OrderStatus=newStatus;
+		this.Status=newStatus;
 	}
 	
 	/**
@@ -72,7 +75,7 @@ public class Order {
 	 * @return order status
 	 */
 	public OrderStatus getStatus(){
-		return this.OrderStatus;
+		return this.Status;
 	}
 	
 	/**
@@ -105,10 +108,15 @@ public class Order {
 		String ret= Restaurant.getName()+", "+
 					user.getFirstName()+" "+
 					user.getLastName()+" : "+
-					"DELIVERY("+Delivery.toString()+
+					"("+Delivery.toString()+")"+
 					":\n";
 		return Menus.keySet().stream().map(a->("\t"+a.getName()+"->"+Menus.get(a)+"\n"))
 				.reduce(ret,(a,b)->(a+b));
 	}
+	
+	public boolean checkStatus(OrderStatus Status) {
+		return this.getStatus()==Status ? true:false;
+	}
+	
 	
 }
