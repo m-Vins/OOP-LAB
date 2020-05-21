@@ -127,7 +127,8 @@ public class Food {
 	
 	/**
 	 * Creates a new menu
-	 * 
+	 *
+	 *
 	 * @param name name of the menu
 	 * 
 	 * @return the newly created menu
