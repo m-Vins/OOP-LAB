@@ -8,13 +8,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
+
+
+
 
 /**
  * Class {@code Region} represents the main facade
@@ -34,9 +37,11 @@ public class Region {
 		private	int minValue;
 		private int maxValue;
 		
-		public range(String... val) {
-			this.minValue=Integer.parseInt(val[0]);
-			this.maxValue=Integer.parseInt(val[1]);
+		
+		public range(String val) {
+			String[] subVal= val.split("-");
+			this.minValue=Integer.parseInt(subVal[0]);
+			this.maxValue=Integer.parseInt(subVal[1]);
 		}
 		
 		public boolean check(int altitude) {
@@ -45,13 +50,6 @@ public class Region {
 			return false;
 		}
 		
-		public int getMaxValue() {
-			return this.maxValue;
-		}
-		
-		public int getMinValue() {
-			return this.minValue;
-		}
 		
 		@Override
 		public String toString() {
@@ -85,7 +83,7 @@ public class Region {
 	 *            an array of textual ranges
 	 */
 	public void setAltitudeRanges(String... ranges) {
-			Ranges=Arrays.stream(ranges).map(a->new range((a.split("-")))).collect(Collectors.toList());
+			Ranges=Arrays.stream(ranges).map(a->new range(a)).collect(Collectors.toList());
 	}
 
 	/**
@@ -119,8 +117,8 @@ public class Region {
 	 * @return the municipality
 	 */
 	public Municipality createOrGetMunicipality(String name, String province, Integer altitude) {
-		return Municipalities.containsKey(name) ? Municipalities.get(name):Municipalities.
-				put(name, new Municipality(name,province,altitude));
+		Municipalities.putIfAbsent(name, new Municipality(name,province,altitude));
+		return Municipalities.get(name);
 	}
 
 	/**
@@ -148,9 +146,10 @@ public class Region {
 	 */
 	public MountainHut createOrGetMountainHut(String name, String category, Integer bedsNumber,
 			Municipality municipality) {
-		return MountainHuts.containsKey(name) ? MountainHuts.get(name):
-			MountainHuts.put(name, new MountainHut(name,Optional.empty(),
-					category,bedsNumber,municipality));
+		
+		MountainHuts.putIfAbsent(name, new MountainHut(name,Optional.empty(),
+				category,bedsNumber,municipality));
+		return MountainHuts.get(name);
 	}
 
 	/**
@@ -171,9 +170,9 @@ public class Region {
 	 */
 	public MountainHut createOrGetMountainHut(String name, Integer altitude, String category, Integer bedsNumber,
 			Municipality municipality) {
-		return MountainHuts.containsKey(name) ? MountainHuts.get(name):
-			MountainHuts.put(name, new MountainHut(name,Optional.ofNullable(altitude),
-					category,bedsNumber,municipality));
+		MountainHuts.putIfAbsent(name, new MountainHut(name,Optional.ofNullable(altitude),
+				category,bedsNumber,municipality));
+		return MountainHuts.get(name);
 	}
 
 	/**
@@ -208,7 +207,23 @@ public class Region {
 	 *            the path of the file
 	 */
 	public static Region fromFile(String name, String file) {
-		return null;
+		Region ret= new Region(name);
+		List<String> data=Region.readData(file);
+		
+
+		data.stream().skip(1).forEach(a->{
+			String[] subData=a.split(";");
+			Municipality m=ret.createOrGetMunicipality(subData[1], subData[0], Integer.parseInt(subData[2]));
+			if(subData[4].equals("")) {
+				ret.createOrGetMountainHut(subData[3], subData[5], Integer.parseInt(subData[6]), m);
+			}else {
+				ret.createOrGetMountainHut(subData[3], Integer.parseInt(subData[4]),
+						subData[5], Integer.parseInt(subData[6]), m);
+			}
+			
+		});
+		
+		return ret;
 	}
 
 	/**
@@ -240,8 +255,12 @@ public class Region {
 	 *         value
 	 */
 	public Map<String, Long> countMunicipalitiesPerProvince() {
-		return null;
+
+		return Municipalities.values().stream().
+				collect(Collectors.groupingBy(a->a.getProvince(),Collectors.counting()));
 	}
+
+	
 
 	/**
 	 * Count the number of mountain huts per each municipality within each province.
@@ -250,7 +269,12 @@ public class Region {
 	 *         municipality as key and the number of mountain huts as value
 	 */
 	public Map<String, Map<String, Long>> countMountainHutsPerMunicipalityPerProvince() {
-		return null;
+
+		
+		return MountainHuts.values().stream().
+				collect(Collectors.groupingBy(a->(String)a.
+						getMunicipality().getProvince(),Collectors.
+						groupingBy(b->(String)b.getMunicipality().getName(),Collectors.counting())));
 	}
 
 	/**
@@ -261,7 +285,12 @@ public class Region {
 	 *         as value
 	 */
 	public Map<String, Long> countMountainHutsPerAltitudeRange() {
-		return null;
+
+		
+		return MountainHuts.values().stream().
+				collect(Collectors.
+				groupingBy(a->getAltitudeRange(a.getAltitude().orElse(a.getMunicipality().getAltitude())),
+						Collectors.counting()));
 	}
 
 	/**
@@ -271,7 +300,9 @@ public class Region {
 	 * @return a map with the province as key and the total number of beds as value
 	 */
 	public Map<String, Integer> totalBedsNumberPerProvince() {
-		return null;
+		return MountainHuts.values().stream().
+				collect(Collectors.groupingBy( a -> a.getMunicipality().getProvince(),
+						Collectors.summingInt(a->a.getBedsNumber())));
 	}
 
 	/**
@@ -283,7 +314,13 @@ public class Region {
 	 *         as value
 	 */
 	public Map<String, Optional<Integer>> maximumBedsNumberPerAltitudeRange() {
-		return null;
+		return MountainHuts.values().stream().
+				collect(Collectors.
+						groupingBy(a->getAltitudeRange(a.getAltitude().
+								orElse(a.getMunicipality().getAltitude())),
+						Collectors.mapping(b->b.getBedsNumber(),
+								Collectors.maxBy(Integer::compareTo))));
+				
 	}
 
 	/**
@@ -294,8 +331,19 @@ public class Region {
 	 *         list of municipality names as value
 	 */
 	public Map<Long, List<String>> municipalityNamesPerCountOfMountainHuts() {
-		return null;
+		
+				/*Map<String,Long> temp=MountainHuts.values().stream().collect(Collectors.
+						groupingBy(a->a.getMunicipality().getName(),Collectors.counting()));
+				//da sistemare
+				return MountainHuts.values().stream().map(a->a.getMunicipality().getName()).
+						collect(Collectors.groupingBy(a->temp.get(a),
+								()->new ArrayList<>(),Collectors.toList() ));*/
+		
+		
+		return MountainHuts.values().stream().map(x->x.getMunicipality().getName()).collect(Collectors.groupingBy(x->x,
+				TreeMap::new,Collectors.counting())).entrySet().stream().collect(
+						Collectors.groupingBy(Map.Entry::getValue,
+						Collectors.mapping(Map.Entry::getKey,Collectors.toList())));
 	}
-
 }
 
