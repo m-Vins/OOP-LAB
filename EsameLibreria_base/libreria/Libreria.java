@@ -1,19 +1,23 @@
 package libreria;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 public class Libreria {
+	private HashMap<String,Editore> Editori=new HashMap<String,Editore>();
 
     public Editore creaEditore(String nome, int tempoConsegna, String email){
-        return null;
+    	Editore ret=new Editore(nome,tempoConsegna,email);
+    	Editori.put(nome,ret);
+        return ret;
     }
 
     public Editore getEditore(String nome){
-        return null;
+        return Editori.get(nome);
     }
 
     public Collection getEditori(){
-        return null;
+        return Editori.values();
     }
 
     public Libro creaLibro(String titolo, String autore, int anno, double prezzo, String nomeEditore)
