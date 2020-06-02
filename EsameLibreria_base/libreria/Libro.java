@@ -8,18 +8,23 @@ public class Libro {
 	private int Anno;
 	private double Prezzo;
 	private Editore Editore;
+	private Libreria Libreria;
 	
 	private int Qta;
 	
 	private HashMap<Integer,Integer> CopiePerSettimana=new HashMap<Integer,Integer>();
 	private HashMap<Integer,Integer> CopiePerMese=new HashMap<Integer,Integer>();
 	
-	public Libro(String titolo,String autore,int anno, double prezzo, Editore editore) {
+	private int soglia;
+	private int qtaRiordino;
+	
+	public Libro(String titolo,String autore,int anno, double prezzo, Editore editore,Libreria Lib) {
 		this.Titolo=titolo;
 		this.Autore=autore;
 		this.Anno=anno;
 		this.Prezzo=prezzo;
 		this.Editore=editore;
+		this.Libreria=Lib;
 	}
 
     public String getTitolo(){
@@ -62,6 +67,11 @@ public class Libro {
     		CopiePerMese.compute(mese,(k,v)->(v+1));
     	
     	this.Qta--; 	
+    	
+    	if(this.Qta<=this.soglia) {
+    		this.Libreria.newOrder(this, this.Editore, this.qtaRiordino);
+    		this.incrementaQta();
+    	}
     }
     
     public int getCopieSettimana(int settimana) {
@@ -74,6 +84,13 @@ public class Libro {
     }
     
     
-    public void setParametri(int soglia, int quantitaRiordino){   
+    public void setParametri(int soglia, int quantitaRiordino){ 
+    	this.soglia=soglia;
+    	this.qtaRiordino=quantitaRiordino;
+    }
+    
+    
+    public void incrementaQta() {
+    	this.Qta+=qtaRiordino;
     }
 }
