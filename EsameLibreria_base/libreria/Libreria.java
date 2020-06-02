@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Libreria {
 	private HashMap<String,Editore> Editori=new HashMap<String,Editore>();
 	private HashMap<String,List<Libro>> LibriPerTitolo= new HashMap<String,List<Libro>>();
 	private HashMap<String,List<Libro>> LibriPerAutore= new HashMap<String,List<Libro>>();
+	private List<Libro> Libri=new ArrayList<Libro>();
 	
 
     public Editore creaEditore(String nome, int tempoConsegna, String email){
@@ -40,7 +42,7 @@ public class Libreria {
     		LibriPerAutore.put(autore,new ArrayList<Libro>());
     	}
     	LibriPerAutore.get(autore).add(ret);
-    	
+    	Libri.add(ret);
         return ret;
     }
     
@@ -58,11 +60,13 @@ public class Libreria {
     }
     
     public Collection getClassificaSettimana(final int settimana){
-        return null;
+    	return Libri.stream().sorted((a,b)->a.getCopieSettimana(settimana)-b.getCopieSettimana(settimana)).
+    	    	collect(Collectors.toList());
     }
     
     public Collection getClassificaMese(final int mese){
-        return null;
+    	return Libri.stream().sorted((a,b)->a.getCopieMese(mese)-b.getCopieMese(mese)).
+    	collect(Collectors.toList());
     }
     
     public Collection getOrdini(){
