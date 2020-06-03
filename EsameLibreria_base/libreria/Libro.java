@@ -80,7 +80,7 @@ public class Libro {
     
     
     public int getCopieMese(int mese) {
-    	return CopiePerSettimana.get(mese);
+    	return CopiePerMese.get(mese);
     }
     
     
