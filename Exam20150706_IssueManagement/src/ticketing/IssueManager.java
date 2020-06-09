@@ -1,10 +1,23 @@
 package ticketing;
 
+
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.stream.Collectors;
+
+import ticketing.Ticket.State;
+
 
 public class IssueManager {
+	private Map<String,User> Users=new HashMap<String,User>();
+	private Map<String,Component> Components=new HashMap<String,Component>();
+	private Map<Integer,Ticket> Tickets=new HashMap<Integer,Ticket>();
+	
+	private int nextTicket=0;
 
     /**
      * Eumeration of valid user classes
@@ -23,7 +36,12 @@ public class IssueManager {
      * @throws TicketException if the username has already been created or if no user class has been specified
      */
     public void createUser(String username, UserClass... classes) throws TicketException {
-        
+    	if(Users.containsKey(username)||classes.length==0) throw new TicketException();
+    	Set<UserClass> s=new HashSet<UserClass>();
+    	for(UserClass x:classes) {
+    		s.add(x);
+    	}
+    	Users.put(username,new User(username,s));
     }
 
     /**
@@ -34,7 +52,8 @@ public class IssueManager {
      * @throws TicketException if the username has already been created or if no user class has been specified
      */
     public void createUser(String username, Set<UserClass> classes) throws TicketException {
-        
+    	if(Users.containsKey(username)||classes.size()==0) throw new TicketException();
+    	Users.put(username, new User(username,classes));
     }
    
     /**
@@ -44,7 +63,7 @@ public class IssueManager {
      * @return the set of user classes the user belongs to
      */
     public Set<UserClass> getUserClasses(String username){
-        return null;
+        return Users.get(username).getUserClasses();
     }
     
     /**
@@ -54,7 +73,13 @@ public class IssueManager {
      * @throws TicketException if a component with the same name already exists
      */
     public void defineComponent(String name) throws TicketException {
+        if(Components.values().stream().filter(s->s.getName().equals(name)).
+        		findFirst().isPresent()) 
+        	throw new TicketException();
         
+        Component c=new Component(name);
+        c.setPath("/"+name);
+        Components.put(c.getPath(),c);
     }
     
     /**
@@ -66,7 +91,11 @@ public class IssueManager {
      *                          if a sub-component of the same parent exists with the same name
      */
     public void defineSubComponent(String name, String parentPath) throws TicketException {
-        
+        if(!Components.containsKey(parentPath))
+        	throw new TicketException();
+        Component c=new Component(name);
+        Components.get(parentPath).addSubComponent(c);
+        Components.put(c.getPath(),c);
     }
     
     /**
@@ -76,7 +105,9 @@ public class IssueManager {
      * @return set of children sub-components
      */
     public Set<String> getSubComponents(String path){
-        return null;
+        return this.Components.get(path).getSubComponent()
+        		.stream().map(Component::getName)
+        		.collect(Collectors.toSet());
     }
 
     /**
@@ -86,7 +117,14 @@ public class IssueManager {
      * @return name of the parent
      */
     public String getParentComponent(String path){
-        return "";
+    	Component c=Components.get(path);
+    	if(c==null)
+    		return null;
+    	c=c.getParent();
+    	if(c==null)
+    		return null;
+    
+        return c.getPath();
     }
 
     /**
@@ -103,7 +141,11 @@ public class IssueManager {
      *                          or the user does not belong to the Reporter {@link IssueManager.UserClass}.
      */
     public int openTicket(String username, String componentPath, String description, Ticket.Severity severity) throws TicketException {
-        return -1;
+        if(!Components.containsKey(componentPath)||!Users.containsKey(username)||
+        		Users.get(username).getUserClasses().contains(UserClass.Reporter))
+        		throw new TicketException();
+        Tickets.put(++nextTicket, new Ticket(description, severity, Components.get(componentPath).getName(), nextTicket));
+    	return nextTicket;
     }
     
     /**
@@ -113,7 +155,7 @@ public class IssueManager {
      * @return the corresponding ticket object
      */
     public Ticket getTicket(int ticketId){
-        return null;
+        return Tickets.get(ticketId);
     }
     
     /**
@@ -122,7 +164,9 @@ public class IssueManager {
      * @return list of ticket objects
      */
     public List<Ticket> getAllTickets(){
-        return null;
+        return Tickets.values().stream()
+        		.sorted((a,b)->a.getSeverity().compareTo(b.getSeverity()))
+        		.collect(Collectors.toList());
     }
     
     /**
@@ -134,7 +178,12 @@ public class IssueManager {
      *                          are not valid, or the user does not belong to the <i>Maintainer</i> user class
      */
     public void assingTicket(int ticketId, String username) throws TicketException {
-        
+        if(!Tickets.containsKey(ticketId)||!Users.containsKey(username)||
+        		Users.get(username).getUserClasses().contains(UserClass.Maintainer)||
+        		Tickets.get(ticketId).getState().equals(State.Closed))
+        	throw new TicketException();
+        Tickets.get(ticketId).setState(Ticket.State.Assigned);
+        //TODO:
     }
 
     /**

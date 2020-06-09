@@ -6,7 +6,14 @@ package ticketing;
  * The ticket is characterized by a severity and a state.
  */
 public class Ticket {
-    
+	private int ID;
+    private String Description;
+	private Severity Severity;
+	private String Author;
+	private String Component;
+	private State State;
+	
+	
     /**
      * Enumeration of possible severity levels for the tickets.
      * 
@@ -19,28 +26,43 @@ public class Ticket {
      */
     public static enum State { Open, Assigned, Closed }
     
+    public Ticket(String Description, Severity severity,String Component, int ID) {
+    	this.Description=Description;
+    	this.Severity=severity;
+    	this.Component=Component;
+    	this.ID=ID;
+    }
+    
     public int getId(){
-        return -1;
+        return this.ID;
     }
 
     public String getDescription(){
-        return null;
+        return this.Description;
     }
     
     public Severity getSeverity() {
-        return null;
+        return this.Severity;
     }
 
     public String getAuthor(){
-        return null;
+        return this.Author;
+    }
+    
+    public void setAuthor(String author) {
+    	this.Author=author;
     }
     
     public String getComponent(){
-        return null;
+        return this.Component;
     }
     
     public State getState(){
-        return null;
+        return this.State;
+    }
+    
+    public void setState(State s) {
+    	this.State=s;
     }
     
     public String getSolutionDescription() throws TicketException {
