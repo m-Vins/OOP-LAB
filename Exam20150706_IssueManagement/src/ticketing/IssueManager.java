@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import ticketing.Ticket.State;
@@ -142,9 +143,9 @@ public class IssueManager {
      */
     public int openTicket(String username, String componentPath, String description, Ticket.Severity severity) throws TicketException {
         if(!Components.containsKey(componentPath)||!Users.containsKey(username)||
-        		Users.get(username).getUserClasses().contains(UserClass.Reporter))
+        		!Users.get(username).getUserClasses().contains(UserClass.Reporter))
         		throw new TicketException();
-        Tickets.put(++nextTicket, new Ticket(description, severity, Components.get(componentPath).getName(), nextTicket));
+        Tickets.put(++nextTicket, new Ticket(description, severity, Components.get(componentPath).getName(), nextTicket,Users.get(username).getUsername()));
     	return nextTicket;
     }
     
@@ -179,11 +180,11 @@ public class IssueManager {
      */
     public void assingTicket(int ticketId, String username) throws TicketException {
         if(!Tickets.containsKey(ticketId)||!Users.containsKey(username)||
-        		Users.get(username).getUserClasses().contains(UserClass.Maintainer)||
+        		!Users.get(username).getUserClasses().contains(UserClass.Maintainer)||
         		Tickets.get(ticketId).getState().equals(State.Closed))
         	throw new TicketException();
-        Tickets.get(ticketId).setState(Ticket.State.Assigned);
-        //TODO:
+        Ticket t= Tickets.get(ticketId);
+        t.setState(Ticket.State.Assigned).setAuthor(Users.get(username).getUsername());
     }
 
     /**
@@ -194,7 +195,9 @@ public class IssueManager {
      * @throws TicketException if the ticket is not in state <i>Assigned</i>
      */
     public void closeTicket(int ticketId, String description) throws TicketException {
-        
+        if(!Tickets.containsKey(ticketId)||!Tickets.get(ticketId).getState().equals(State.Assigned))
+        	throw new TicketException();
+        Tickets.get(ticketId).setState(State.Closed).setSolution(description);
     }
 
     /**
@@ -205,7 +208,14 @@ public class IssueManager {
      * @return a map with the severity and the corresponding count 
      */
     public SortedMap<Ticket.Severity,Long> countBySeverityOfState(Ticket.State state){
-        return null;
+    	if(state==null) {
+    		return Tickets.values().stream().collect(Collectors.
+        			groupingBy(Ticket::getSeverity,()->new TreeMap<Ticket.Severity,Long>(),
+        					Collectors.counting()));
+    	}
+    	return Tickets.values().stream().filter(s->s.getState()==state).collect(Collectors.
+    			groupingBy(Ticket::getSeverity,()->new TreeMap<Ticket.Severity,Long>(),
+    					Collectors.counting()));
     }
 
     /**
@@ -218,7 +228,13 @@ public class IssueManager {
      * @return A list of strings with the top maintainers.
      */
     public List<String> topMaintainers(){
-        return null;
+    	return Tickets.values().stream().filter(s->s.getState()==State.Closed)
+    	.collect(Collectors.groupingBy(Ticket::getAuthor,Collectors.counting()))
+    	.entrySet().stream().sorted((a,b)->{
+    		return b.getValue().equals(a.getValue()) ? a.getKey().compareTo(b.getKey()):b.getValue().compareTo(a.getValue());
+    	})
+    	.map(s->s.getKey().toString()+":"+s.getValue().toString()).
+    	collect(Collectors.toList());
     }
 
 }

@@ -19,18 +19,21 @@ public class Ticket {
      * 
      * Note: the natural order corresponds to the order of declaration
      */
-    public enum Severity { Blocking, Critical, Major, Minor, Cosmetic };
+    public enum Severity { Blocking, Critical, Major, Minor, Cosmetic }
     
     /**
      * Enumeration of the possible valid states for a ticket
      */
-    public static enum State { Open, Assigned, Closed }
+    public static enum State { Open, Assigned, Closed };
     
-    public Ticket(String Description, Severity severity,String Component, int ID) {
+    @SuppressWarnings("static-access")
+	public Ticket(String Description, Severity severity,String Component, int ID, String Author) {
     	this.Description=Description;
     	this.Severity=severity;
     	this.Component=Component;
     	this.ID=ID;
+    	this.State=State.Open;
+    	this.Author=Author;
     }
     
     public int getId(){
@@ -49,8 +52,9 @@ public class Ticket {
         return this.Author;
     }
     
-    public void setAuthor(String author) {
+    public Ticket setAuthor(String author) {
     	this.Author=author;
+    	return this;
     }
     
     public String getComponent(){
@@ -61,11 +65,20 @@ public class Ticket {
         return this.State;
     }
     
-    public void setState(State s) {
+    public Ticket setState(State s) {
     	this.State=s;
+    	return this;
     }
     
-    public String getSolutionDescription() throws TicketException {
-        return null;
+    @SuppressWarnings("static-access")
+	public String getSolutionDescription() throws TicketException {
+    	if(!this.getState().equals(State.Closed)) throw new TicketException();
+        return Description;
     }
+
+
+
+	public void setSolution(String solution) {
+		Description=solution;
+	}
 }
