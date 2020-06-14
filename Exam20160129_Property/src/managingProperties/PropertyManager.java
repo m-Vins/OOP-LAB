@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class PropertyManager {
 	private HashMap<String,Building> Buildings=new HashMap<String,Building>();
 	private HashMap<String,List<String>> OwnerApartments=new HashMap<String,List<String>>();
+	private HashMap<String,Profession> Professions=new HashMap<String,Profession>();
 	
 	/**
 	 * Add a new building 
@@ -51,7 +52,13 @@ public class PropertyManager {
 	}
 
 	public void addProfessionals(String profession, String... professionals) throws PropertyException {
-				
+				if(Professions.containsKey(profession)) 
+					throw new PropertyException("professione "+profession+" già esistente");
+				for(String x:professionals) {
+					if(Professions.values().stream().filter(s->s.containId(x)).findFirst().isPresent())
+						throw new PropertyException("id "+ x+" già esistente");
+				}
+				Professions.put(profession, new Profession(profession,professionals));
 	}
 
 	/**
@@ -59,8 +66,9 @@ public class PropertyManager {
 	 *
 	 */
 	public SortedMap<String, Integer> getProfessions() {
-		
-		return null;
+		SortedMap<String,Integer> ret=new TreeMap<String,Integer>();
+		Professions.values().stream().forEach(s->ret.put(s.getProfession(), s.getSize()));
+		return ret;
 	}
 
 	public int addRequest(String owner, String apartment, String profession) throws PropertyException {
