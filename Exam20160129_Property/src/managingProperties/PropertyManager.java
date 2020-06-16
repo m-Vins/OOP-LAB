@@ -102,8 +102,10 @@ public class PropertyManager {
 
 	
 	public void charge(int requestN, int amount) throws PropertyException {
-		
-		
+		if(!Requests.containsKey(requestN)||!Requests.get(requestN).getState().equals(State.assigned)
+			||amount<0||amount>1000)
+			throw new PropertyException();
+		Requests.get(requestN).setAmount(amount);
 	}
 
 	/**
@@ -111,8 +113,9 @@ public class PropertyManager {
 	 * 
 	 */
 	public List<Integer> getCompletedRequests() {
-		
-		return null;
+		return this.Requests.values().stream().filter(s->s.getState().equals(State.completed)).
+				sorted((a,b)->a.getId()-b.getId()).map(s->s.getId()).
+				collect(Collectors.toList());
 	}
 	
 	/**
