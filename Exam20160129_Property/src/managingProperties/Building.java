@@ -1,6 +1,6 @@
 package managingProperties;
 
-import java.util.ArrayList;
+
 
 public class Building {
 	private String id;
@@ -31,5 +31,11 @@ public class Building {
 		if(index<0||index>this.n||Owners[index]!=null)
 			throw new PropertyException();
 		Owners[index]=owner;
+	}
+	
+	public boolean checkApartment(int n) {
+		if(n>=0&&n<this.n)
+			return true;
+		return false;
 	}
 }

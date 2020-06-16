@@ -1,11 +1,13 @@
 package managingProperties;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Profession {
 	private String profession;
 	private List<String> ids;
+	private HashMap<String,Integer> Assigned=new HashMap<String,Integer>();
 	
 	
 	public Profession(String profession,String... id) {
@@ -29,5 +31,11 @@ public class Profession {
 	
 	public int getSize() {
 		return ids.size();
+	}
+	
+	public void Assign(String id,int requestN) throws PropertyException {
+		if(!ids.contains(id))
+			throw new PropertyException();
+		Assigned.put(id, requestN);
 	}
 }

@@ -8,11 +8,14 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import managingProperties.Request.State;
+
 public class PropertyManager {
 	private HashMap<String,Building> Buildings=new HashMap<String,Building>();
 	private HashMap<String,List<String>> OwnerApartments=new HashMap<String,List<String>>();
 	private HashMap<String,Profession> Professions=new HashMap<String,Profession>();
-	
+	private HashMap<Integer,Request> Requests=new HashMap<Integer,Request>();
+	private int nextRequest=0;
 	/**
 	 * Add a new building 
 	 */
@@ -72,18 +75,29 @@ public class PropertyManager {
 	}
 
 	public int addRequest(String owner, String apartment, String profession) throws PropertyException {
-		
-		return 0;
+		String[] subString=apartment.split(":");
+		if(!OwnerApartments.containsKey(owner)||!Buildings.containsKey(subString[0])
+				||!Buildings.get(subString[0]).checkApartment(Integer.parseInt(subString[1]))
+				||!OwnerApartments.get(owner).contains(apartment)
+				||!Professions.containsKey(profession))
+			throw new PropertyException();
+		Requests.put(++nextRequest, new Request(owner,apartment,profession,nextRequest));
+			
+		return nextRequest;
 	}
 
 	public void assign(int requestN, String professional) throws PropertyException {
-		
-		
+		if(!Requests.containsKey(requestN)||!Requests.get(requestN).getState().equals(State.pending)
+				||!Professions.get(Requests.get(requestN).getProfession()).containId(professional))
+			throw new PropertyException();
+		Professions.get(Requests.get(requestN).getProfession()).Assign(professional, requestN);
+		Requests.get(requestN).setProfessional(professional).setAssigned();	
 	}
 
 	public List<Integer> getAssignedRequests() {
-		
-		return null;
+		return this.Requests.values().stream().filter(s->s.getState().equals(State.assigned)).
+				sorted((a,b)->a.getId()-b.getId()).map(s->s.getId()).
+				collect(Collectors.toList());
 	}
 
 	
