@@ -123,8 +123,8 @@ public class PropertyManager {
 	 * 
 	 */
 	public SortedMap<String, Integer> getCharges() {
-		
-		return null;
+		return Requests.values().stream().filter(s->s.getState().equals(State.completed))
+		.collect(Collectors.groupingBy(Request::getOwner,TreeMap::new,Collectors.summingInt(Request::getAmount)));
 	}
 
 	/**
@@ -133,8 +133,12 @@ public class PropertyManager {
 	 * 
 	 */
 	public SortedMap<String, Map<String, Integer>> getChargesOfBuildings() {
-		
-		return null;
+		return Requests.values().stream().filter(s->s.getState().equals(State.completed)).
+		collect(Collectors.groupingBy(s->{
+			String[] subString=s.getApartment().split(":");
+			return subString[0];
+		},TreeMap::new,Collectors.groupingBy(Request::getProfessional,
+				TreeMap::new,Collectors.summingInt(Request::getAmount))));
 	}
 
 }

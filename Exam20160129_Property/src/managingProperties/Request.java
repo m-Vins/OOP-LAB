@@ -38,7 +38,7 @@ public class Request {
 		return this.state;
 	}
 	
-	public String getOwnre() {
+	public String getOwner() {
 		return this.Owner;
 	}
 	
