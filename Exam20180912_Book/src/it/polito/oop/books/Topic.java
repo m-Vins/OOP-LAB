@@ -36,4 +36,13 @@ public class Topic {
 		ret.sort((a,b)->a.toString().compareTo(b.toString()));
         return ret;
 	}
+	
+	public List<Topic> getSubTopicR(List<Topic> ret){
+		List<Topic> subTopic=this.getSubTopics();
+		for(Topic x:subTopic) {
+			ret.add(x);
+			x.getSubTopicR((ret));
+		}
+		return ret;
+	}
 }

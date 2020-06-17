@@ -62,45 +62,45 @@ public final class TestApp {
         
         assertEquals(6,q1.numAnswers());
     
-////R3        
-//        TheoryChapter theory_1 = oop.createTheoryChapter("Java Fundamentals", 42,
-//                "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
-//        theory_1.addTopic(oop.getTopic("Java"));
-//
-//        assertEquals("Java Fundamentals",theory_1.getTitle());
-//        assertNotNull(theory_1.getTopics());
-//        assertEquals(Arrays.asList( "Abstract classes",
-//                                    "Classes",
-//                                    "Functional Interfaces", 
-//                                    "Generics",
-//                                    "Inheritance",
-//                                    "Interfaces",
-//                                    "Java",
-//                                    "Lambda expressions"),
-//                    theory_1.getTopics().stream().map(Topic::getKeyword).collect(Collectors.toList()));
-//
-//        
-//        ExerciseChapter ex_1 = oop.createExerciseChapter("Problems", 42);
-//        ex_1.addQuestion(q1);
-//
-//        Question q2;
-//        q2 = oop.createQuestion("What are Functional Interfaces", oop.getTopic("Functional Interfaces"));
-//        q2.addAnswer("Foo", true);
-//        q2.addAnswer("Bar", false);
-//        ex_1.addQuestion(q2);
-//        
-//        Question q2b;
-//        q2b = oop.createQuestion("What are Functional Interfaces", oop.getTopic("Functional Interfaces"));
-//        q2b.addAnswer("Foo", true);
-//        q2b.addAnswer("Bar", false);
-//        ex_1.addQuestion(q2b);
-//
-//        assertNotNull(ex_1.getTopics());
-//        assertEquals(Arrays.asList( "Functional Interfaces", 
-//                                    "Java"),
-//                    ex_1.getTopics().stream().map(Topic::getKeyword).collect(Collectors.toList()));
-//
-//
+//R3        
+        TheoryChapter theory_1 = oop.createTheoryChapter("Java Fundamentals", 42,
+                "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+        theory_1.addTopic(oop.getTopic("Java"));
+
+        assertEquals("Java Fundamentals",theory_1.getTitle());
+        assertNotNull(theory_1.getTopics());
+        assertEquals(Arrays.asList( "Abstract classes",
+                                    "Classes",
+                                    "Functional Interfaces", 
+                                    "Generics",
+                                    "Inheritance",
+                                    "Interfaces",
+                                    "Java",
+                                    "Lambda expressions"),
+                    theory_1.getTopics().stream().map(Topic::getKeyword).collect(Collectors.toList()));
+
+        
+        ExerciseChapter ex_1 = oop.createExerciseChapter("Problems", 42);
+        ex_1.addQuestion(q1);
+
+        Question q2;
+        q2 = oop.createQuestion("What are Functional Interfaces", oop.getTopic("Functional Interfaces"));
+        q2.addAnswer("Foo", true);
+        q2.addAnswer("Bar", false);
+        ex_1.addQuestion(q2);
+        
+        Question q2b;
+        q2b = oop.createQuestion("What are Functional Interfaces", oop.getTopic("Functional Interfaces"));
+        q2b.addAnswer("Foo", true);
+        q2b.addAnswer("Bar", false);
+        ex_1.addQuestion(q2b);
+
+        assertNotNull(ex_1.getTopics());
+        assertEquals(Arrays.asList( "Functional Interfaces", 
+                                    "Java"),
+                    ex_1.getTopics().stream().map(Topic::getKeyword).collect(Collectors.toList()));
+
+
 ////R4
 //        assertNotNull(oop.getAllTopics());
 //        assertEquals(Arrays.asList( "Abstract classes",
@@ -141,5 +141,6 @@ public final class TestApp {
 //        assertEquals(1.0,score,0.0001);
 //
 //        assertEquals(1.8333,e.totalScore(),0.0001);
+
     }
 }

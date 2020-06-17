@@ -33,11 +33,11 @@ public class Book {
 	}
 
 	public TheoryChapter createTheoryChapter(String title, int numPages, String text) {
-        return null;
+        return new TheoryChapter(title,numPages,text);
 	}
 
 	public ExerciseChapter createExerciseChapter(String title, int numPages) {
-        return null;
+        return new ExerciseChapter(title, numPages);
 	}
 
 	public List<Topic> getAllTopics() {
