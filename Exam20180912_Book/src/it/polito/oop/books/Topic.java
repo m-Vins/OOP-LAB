@@ -1,20 +1,30 @@
 package it.polito.oop.books;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Topic {
+	private String keyword;
+	private Set<Topic> subTopics=new HashSet<Topic>();
+	
+
+	public Topic(String keyword) {
+		this.keyword=keyword;
+	}
 
 	public String getKeyword() {
-        return null;
+        return this.keyword;
 	}
 	
 	@Override
 	public String toString() {
-	    return null;
+	    return this.keyword;
 	}
 
 	public boolean addSubTopic(Topic topic) {
-        return false;
+		return subTopics.add(topic);
 	}
 
 	/*
@@ -22,6 +32,8 @@ public class Topic {
 	 * affecting any of the Book topic.
 	 */
 	public List<Topic> getSubTopics() {
-        return null;
+		List<Topic> ret=new ArrayList<Topic>(subTopics);
+		ret.sort((a,b)->a.toString().compareTo(b.toString()));
+        return ret;
 	}
 }

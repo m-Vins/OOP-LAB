@@ -1,10 +1,12 @@
 package it.polito.oop.books;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Book {
-
+	private HashMap<String,Topic> Topics=new HashMap<String,Topic>();
+	private HashMap<String,Question> Questions=new HashMap<String,Question>();
     /**
 	 * Creates a new topic, if it does not exist yet, or returns a reference to the
 	 * corresponding topic.
@@ -14,11 +16,20 @@ public class Book {
 	 * @throws BookException
 	 */
 	public Topic getTopic(String keyword) throws BookException {
-	    return null;
+		if(keyword.equals("")||keyword==null)
+			throw new BookException();
+		if(Topics.containsKey(keyword))
+			return Topics.get(keyword);
+		Topic t=new Topic(keyword);
+		Topics.put(keyword, t);
+	    return t;
 	}
 
 	public Question createQuestion(String question, Topic mainTopic) {
-        return null;
+		Question ret=new Question(question,mainTopic);
+		this.Questions.put(question, ret);
+
+		return ret;
 	}
 
 	public TheoryChapter createTheoryChapter(String title, int numPages, String text) {
