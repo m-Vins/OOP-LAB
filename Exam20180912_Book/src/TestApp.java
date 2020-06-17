@@ -127,20 +127,20 @@ public final class TestApp {
         assertTrue(qo.keySet().containsAll(Arrays.asList(0L,2L,6L)));
         assertEquals("What is Java",qo.get(6L).get(0).getQuestion());
 
-////R5        
-//       
-//        Assignment e = oop.newAssignment("s123456", ex_1);
-//        ArrayList<String> response = new ArrayList<>();
-//        response.add("A slang term for coffee");
-//        double score = e.addResponse(q1, response);  
-//        assertEquals(0.8333,score,0.0001);
-//
-//        response = new ArrayList<>();
-//        response.add("Foo");
-//        score = e.addResponse(q2, response);
-//        assertEquals(1.0,score,0.0001);
-//
-//        assertEquals(1.8333,e.totalScore(),0.0001);
+//R5        
+       
+        Assignment e = oop.newAssignment("s123456", ex_1);
+        ArrayList<String> response = new ArrayList<>();
+        response.add("A slang term for coffee");
+        double score = e.addResponse(q1, response);  
+        assertEquals(0.8333,score,0.0001);
+
+        response = new ArrayList<>();
+        response.add("Foo");
+        score = e.addResponse(q2, response);
+        assertEquals(1.0,score,0.0001);
+
+        assertEquals(1.8333,e.totalScore(),0.0001);
 
 
    }

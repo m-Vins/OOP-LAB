@@ -69,7 +69,7 @@ public class Book {
 	}
 
 	public Assignment newAssignment(String ID, ExerciseChapter chapter) {
-        return null;
+        return new Assignment(ID,chapter);
 	}
 	
     /**
@@ -79,6 +79,6 @@ public class Book {
      */
     public Map<Long,List<Question>> questionOptions(){
         return Questions.values().stream().collect(Collectors.
-    			groupingBy(s->s.numAnswers(),Collectors.toList()));
+    			groupingBy(Question::numAnswers,Collectors.toList()));
     }
 }
