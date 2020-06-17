@@ -101,32 +101,32 @@ public final class TestApp {
                     ex_1.getTopics().stream().map(Topic::getKeyword).collect(Collectors.toList()));
 
 
-////R4
-//        assertNotNull(oop.getAllTopics());
-//        assertEquals(Arrays.asList( "Abstract classes",
-//                                    "Classes",
-//                                    "Functional Interfaces", 
-//                                    "Generics",
-//                                    "Inheritance",
-//                                    "Interfaces",
-//                                    "Java",
-//                                    "Lambda expressions"),
-//                    oop.getAllTopics().stream().map(Topic::getKeyword).collect(Collectors.toList()));
-//
-//
-//        assertTrue(oop.checkTopics());
-//        
-//        
-//        Question qx = oop.createQuestion("Foo", oop.getTopic("Zap"));
-//        ex_1.addQuestion(qx);
-//        System.out.println(oop.checkTopics()); // false
-//        assertFalse(oop.checkTopics());
-//
-//        Map<Long,List<Question>> qo = oop.questionOptions();
-//        assertNotNull(qo);
-//        assertTrue(qo.keySet().containsAll(Arrays.asList(0L,2L,6L)));
-//        assertEquals("What is Java",qo.get(6L).get(0).getQuestion());
-//
+//R4
+        assertNotNull(oop.getAllTopics());
+        assertEquals(Arrays.asList( "Abstract classes",
+                                    "Classes",
+                                    "Functional Interfaces", 
+                                    "Generics",
+                                    "Inheritance",
+                                    "Interfaces",
+                                    "Java",
+                                    "Lambda expressions"),
+                    oop.getAllTopics().stream().map(Topic::getKeyword).collect(Collectors.toList()));
+
+
+        assertTrue(oop.checkTopics());
+        
+        
+        Question qx = oop.createQuestion("Foo", oop.getTopic("Zap"));
+        ex_1.addQuestion(qx);
+        System.out.println(oop.checkTopics()); // false
+        assertFalse(oop.checkTopics());
+
+        Map<Long,List<Question>> qo = oop.questionOptions();
+        assertNotNull(qo);
+        assertTrue(qo.keySet().containsAll(Arrays.asList(0L,2L,6L)));
+        assertEquals("What is Java",qo.get(6L).get(0).getQuestion());
+
 ////R5        
 //       
 //        Assignment e = oop.newAssignment("s123456", ex_1);
@@ -142,5 +142,6 @@ public final class TestApp {
 //
 //        assertEquals(1.8333,e.totalScore(),0.0001);
 
-    }
+
+   }
 }

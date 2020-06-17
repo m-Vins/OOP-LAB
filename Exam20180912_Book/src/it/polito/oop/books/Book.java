@@ -1,12 +1,17 @@
 package it.polito.oop.books;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Book {
 	private HashMap<String,Topic> Topics=new HashMap<String,Topic>();
 	private HashMap<String,Question> Questions=new HashMap<String,Question>();
+	private List<TheoryChapter> TheoryChapters=new ArrayList<TheoryChapter>();
+	private List<ExerciseChapter> ExerciseChapters=new ArrayList<ExerciseChapter>();
+	
     /**
 	 * Creates a new topic, if it does not exist yet, or returns a reference to the
 	 * corresponding topic.
@@ -33,19 +38,34 @@ public class Book {
 	}
 
 	public TheoryChapter createTheoryChapter(String title, int numPages, String text) {
-        return new TheoryChapter(title,numPages,text);
+		TheoryChapter ret=new TheoryChapter(title,numPages,text);
+		TheoryChapters.add(ret);
+        return ret;
 	}
 
 	public ExerciseChapter createExerciseChapter(String title, int numPages) {
-        return new ExerciseChapter(title, numPages);
+		ExerciseChapter ret=new ExerciseChapter(title, numPages);
+		ExerciseChapters.add(ret);
+        return ret;
 	}
 
 	public List<Topic> getAllTopics() {
-        return null;
+		return Topics.values().stream().filter(s->{
+				return TheoryChapters.stream().filter(a->a.getTopics().contains(s)).findFirst().isPresent()||
+					ExerciseChapters.stream().filter(a->a.getTopics().contains(s)).findFirst().isPresent();
+		}).distinct().sorted((a,b)->a.toString().compareTo(b.toString())).
+		collect(Collectors.toList());
 	}
 
 	public boolean checkTopics() {
-        return false;
+		for(ExerciseChapter x:ExerciseChapters) {
+			if(x.getTopics().stream().filter(s->{
+					return !TheoryChapters.stream().filter(a->a.getTopics().
+							contains(s)).findFirst().isPresent();
+				}).findFirst().isPresent())
+				return false;
+		}
+		return true;
 	}
 
 	public Assignment newAssignment(String ID, ExerciseChapter chapter) {
@@ -58,6 +78,7 @@ public class Book {
      * @return
      */
     public Map<Long,List<Question>> questionOptions(){
-        return null;
+        return Questions.values().stream().collect(Collectors.
+    			groupingBy(s->s.numAnswers(),Collectors.toList()));
     }
 }
