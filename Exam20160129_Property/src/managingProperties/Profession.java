@@ -10,11 +10,14 @@ public class Profession {
 	private HashMap<String,Integer> Assigned=new HashMap<String,Integer>();
 	
 	
-	public Profession(String profession,String... id) {
+	public Profession(String profession,String... id) throws PropertyException {
 		this.setProfession(profession);
 		this.ids=new ArrayList<String>();
-		for(String x:id)
+		for(String x:id) {
+			if(ids.contains(x))
+				throw new PropertyException();
 			ids.add(x);
+		}
 	}
 	
 	public boolean containId(String id) {
