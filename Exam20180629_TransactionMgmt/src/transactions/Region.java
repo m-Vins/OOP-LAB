@@ -22,4 +22,8 @@ public class Region {
 	public SortedSet<String> getPlaces(){
 		return this.Places;
 	}
+	
+	public boolean checkPlace(String placeName) {
+		return Places.contains(placeName);
+	}
 }

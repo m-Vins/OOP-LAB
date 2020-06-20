@@ -26,4 +26,8 @@ public class Carrier {
 	public boolean checkRegion(Region region) {
 		return Regions.contains(region);
 	}
+	
+	public boolean checkPlace(String placeName) {
+		return Regions.stream().filter(s->s.checkPlace(placeName)).findAny().isPresent();
+	}
 }
