@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import java.util.Comparator;
 
 
 public class Delivery {
@@ -174,7 +176,9 @@ public class Delivery {
      * @throws DeliveryException when the id is invalid
      */
     public OrderStatus getStatus(int orderId) throws DeliveryException {
-        return null;
+    	if(!Orders.containsKey(orderId))
+    		throw new DeliveryException();
+        return Orders.get(orderId).getState();
     }
     
     /**
@@ -192,7 +196,11 @@ public class Delivery {
      * @throws DeliveryException when order ID invalid to status not {@code NEW}
      */
     public int confirm(int orderId) throws DeliveryException {
-        return -1;
+    	if(!Orders.containsKey(orderId)||!Orders.get(orderId).getState().equals(OrderStatus.NEW))
+    		throw new DeliveryException();
+    	Orders.get(orderId).setState(OrderStatus.CONFIRMED);
+    	return 20+Orders.get(orderId).getItems().keySet().stream().
+        		mapToInt(Menu::getPrepTime).max().orElseThrow(()->new DeliveryException());
     }
 
     /**
@@ -209,7 +217,11 @@ public class Delivery {
      * @throws DeliveryException when order ID invalid to status not {@code CONFIRMED}
      */
     public int start(int orderId) throws DeliveryException {
-        return -1;
+    	if(!Orders.containsKey(orderId)||!Orders.get(orderId).getState().equals(OrderStatus.CONFIRMED))
+    		throw new DeliveryException();
+    	Orders.get(orderId).setState(OrderStatus.PREPARATION);
+    	return 15+Orders.get(orderId).getItems().keySet().stream().
+        		mapToInt(Menu::getPrepTime).max().orElseThrow(()->new DeliveryException());
     }
 
     /**
@@ -225,7 +237,10 @@ public class Delivery {
      * @throws DeliveryException when order ID invalid to status not {@code PREPARATION}
      */
     public int deliver(int orderId) throws DeliveryException {
-        return -1;
+    	if(!Orders.containsKey(orderId)||!Orders.get(orderId).getState().equals(OrderStatus.PREPARATION))
+    		throw new DeliveryException();
+    	Orders.get(orderId).setState(OrderStatus.ON_DELIVERY);
+        return 15;
     }
     
     /**
@@ -237,6 +252,9 @@ public class Delivery {
      * @throws DeliveryException when order ID invalid to status not {@code ON_DELIVERY}
      */
     public void complete(int orderId) throws DeliveryException {
+    	if(!Orders.containsKey(orderId)||!Orders.get(orderId).getState().equals(OrderStatus.ON_DELIVERY))
+    		throw new DeliveryException();
+    	Orders.get(orderId).setState(OrderStatus.DELIVERED);
     }
     
     /**
@@ -246,7 +264,10 @@ public class Delivery {
      * @return total amount
      */
     public double totalCustomer(int customerId){
-        return -1.0;
+        return Orders.values().stream().filter(s->!s.getState().
+        		equals(OrderStatus.NEW)).filter(s->s.getIDcustomer()==(customerId))
+        		.flatMap(s->s.getItems().entrySet().stream()).mapToDouble(s->s.getKey().getPrice()*s.getValue())
+        		.sum();
     }
     
     /**
@@ -255,7 +276,11 @@ public class Delivery {
      * @return the classification
      */
     public SortedMap<Double,List<String>> bestCustomers(){
-        return null;
+        return Customers.values().stream().collect(Collectors.groupingBy(
+    			s->this.totalCustomer(s.getID()),
+    			()->new TreeMap<Double,List<String>>(Comparator.reverseOrder()),
+    			Collectors.mapping(s->s.getInfo(), Collectors.toList())
+    			));
     }
     
 // NOT REQUIRED
