@@ -89,7 +89,7 @@ public class ElectiveManager {
      * @throws ElectiveException : if the number of selected course is not in [1,3] or the id has not been defined.
      */
     public int requestEnroll(String id, List<String> courses)  throws ElectiveException {
-    	if(!Students.containsKey(id)||courses.size()<1||courses.size()>3)
+    	if(!Students.containsKey(id)||courses.size()<1||courses.size()>=3)
     		throw new ElectiveException();
     	Student s=Students.get(id);
     	int i=0;
